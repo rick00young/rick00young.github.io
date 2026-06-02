@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>🎮 AI游乐场 · 无限AI小游戏市场</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div id="navbar"></div>
+
+    <!-- Hero 区域 -->
+    <section class="hero">
+      <div class="hero-text">
+        <div class="hero-badge"><i class="fas fa-microchip"></i> AI 驱动 · 无限创意</div>
+        <h2>
+          探索 <span class="hero-gradient">无限</span> AI 游戏<br>
+          发现你的下一款心头好
+        </h2>
+        <p>每个游戏都由AI赋能，每一刻都是全新体验。进入AI游乐场，开启你的智能游戏之旅。</p>
+        <div class="hero-stats" id="heroStats"></div>
+      </div>
+      <div class="hero-illustration"></div>
+    </section>
+
+    <!-- 分类芯片 -->
+    <div class="cat-chips" id="catChips">
+      <a href="games.html" class="cat-chip active"><i class="fas fa-fire"></i> 全部</a>
+    </div>
+
+    <!-- 游戏卡片网格 -->
+    <h3 style="margin-top:1rem;"><i class="fas fa-fire" style="color:#ff6b6b;"></i> 热门游戏</h3>
+    <div class="game-grid" id="gameGrid"></div>
+
+    <!-- 双栏：热门排行 & 最新上线 -->
+    <div class="double-col">
+      <div class="rank-list">
+        <h4><i class="fas fa-trophy"></i> 🏆 社区热门榜 <span class="ai-tag" style="font-size:0.7rem;"><i class="fas fa-microchip"></i> AI 实时热度</span></h4>
+        <div id="hotRankList"></div>
+      </div>
+      <div class="new-list">
+        <h4><i class="fas fa-sparkles"></i> ✨ 最新AI游戏 <span class="ai-tag">今日上架</span></h4>
+        <div id="newGameList"></div>
+      </div>
+    </div>
+
+    <!-- AI精选推荐 -->
+    <h3 style="margin-top:1rem;"><i class="fas fa-star" style="color:#ffd700;"></i> AI 精选推荐</h3>
+    <div class="game-grid" id="recommendGrid"></div>
+
+    <div id="footer"></div>
+  </div>
+
+  <script src="static/js/data.js"></script>
+  <script src="static/js/app.js"></script>
+  <script>
+    // ---------- 首页初始化 ----------
+    document.addEventListener('DOMContentLoaded', function() {
+      renderNavBar('navbar');
+      renderFooter('footer');
+
+      const games = getAllGames();
+      const hotGames = getHotGames(5);
+      const newGames = getNewGames(5);
+      const recommended = getRecommendedGames(6);
+      const types = getGameTypes();
+      const stats = getGameStats();
+
+      // HERO stats
+      document.getElementById('heroStats').innerHTML = `
+        <div class="hero-stat"><strong>${stats.total_games}</strong><span>AI 游戏</span></div>
+        <div class="hero-stat"><strong>${stats.total_plays}</strong><span>总试玩</span></div>
+        <div class="hero-stat"><strong>${stats.game_types.length}</strong><span>游戏类型</span></div>
+      `;
+
+      // Category chips
+      const chipsHtml = '<a href="games.html" class="cat-chip active"><i class="fas fa-fire"></i> 全部</a>' +
+        types.map(t => `<a href=\"games.html?type=${encodeURIComponent(t)}" class="cat-chip">${t}</a>`).join('');
+      document.getElementById('catChips').innerHTML = chipsHtml;
+
+      // Game grid (first 8 games)
+      renderGameCards(games.slice(0, 8), 'gameGrid');
+
+      // Hot rank list
+      document.getElementById('hotRankList').innerHTML = hotGames.map((game, index) => `
+        <a href="games/${game.id}/index.html" class="rank-item">
+          <div class="rank-number">${index + 1}</div>
+          <div class="rank-name">${game.game_name}</div>
+          <div class="rank-score">${formatNumber(game.play_count)} 次试玩</div>
+        </a>
+      `).join('');
+
+      // New game list
+      document.getElementById('newGameList').innerHTML = newGames.map((game, index) => `
+        <a href="games/${game.id}/index.html" class="new-item">
+          <span><i class="fas fa-${iconList[index % iconList.length]}"></i> ${game.game_name}</span>
+          <span class="rank-score">${game.create_time}</span>
+        </a>
+      `).join('');
+
+      // Recommended
+      renderGameCards(recommended, 'recommendGrid');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>404 · 页面未找到 · AI游乐场</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="static/css/style.css">
+  <style>
+    .error-page { text-align:center; padding:6rem 2rem; }
+    .error-code { font-size:6rem; font-weight:800; background:var(--gradient-1); -webkit-background-clip:text; background-clip:text; color:transparent; line-height:1; margin-bottom:0.5rem; }
+    .error-message { font-size:1.6rem; margin-bottom:0.5rem; }
+    .error-desc { color:var(--text-secondary); margin-bottom:2rem; }
+    .btn { display:inline-block; padding:0.6rem 1.4rem; border-radius:var(--radius-xl); font-size:0.9rem; font-weight:500; cursor:pointer; transition:var(--transition); }
+    .btn-primary { background:var(--gradient-1); color:#fff; border:none; }
+    .btn-outline { background:transparent; border:1px solid var(--accent-2); color:var(--accent-2); }
+    .btn:hover { opacity:0.9; transform:translateY(-1px); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="navbar"></div>
+
+    <div class="error-page">
+      <div class="error-code">404</div>
+      <h2 class="error-message">🎮 这个关卡不存在</h2>
+      <p class="error-desc">AI在次元空间里没找到这个页面...</p>
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <a href="index.html" class="btn btn-primary">🏠 回到首页</a>
+        <a href="games.html" class="btn btn-outline">🎯 探索游戏</a>
+      </div>
+    </div>
+
+    <div id="footer"></div>
+  </div>
+
+  <script src="static/js/data.js"></script>
+  <script src="static/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      renderNavBar('navbar');
+      renderFooter('footer');
+    });
+  </script>
+</body>
+</html>

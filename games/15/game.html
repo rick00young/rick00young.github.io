@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Proxx · 扫清黑洞 | 立体声效 | 逻辑益智游戏</title>
+  <style>
+    * {
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(145deg, #1a2a3a 0%, #0f1a24 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', 'Poppins', 'Roboto', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* 游戏面板容器 */
+    .game-container {
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(2px);
+      border-radius: 3rem;
+      padding: 1.5rem;
+      box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    }
+
+    .proxx-card {
+      background: #1e2f3c;
+      border-radius: 2rem;
+      padding: 1.2rem;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    /* 头部信息栏 */
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding: 0 8px;
+    }
+
+    .title-badge {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      margin: 0;
+      background: linear-gradient(135deg, #E6F7FF, #8BC6EC);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .sub {
+      font-size: 0.8rem;
+      background: #2c4b5e;
+      padding: 4px 12px;
+      border-radius: 40px;
+      color: #b9e2ff;
+      font-weight: 500;
+    }
+
+    .stats-panel {
+      display: flex;
+      gap: 18px;
+      background: #0b1a22;
+      padding: 8px 20px;
+      border-radius: 60px;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5), 0 2px 3px rgba(255, 255, 255, 0.05);
+    }
+
+    .stat {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-weight: bold;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: #8aaec0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .stat-value {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #ffd966;
+      line-height: 1;
+      text-shadow: 0 0 5px #ffb34730;
+    }
+
+    /* 控制栏 */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      background: #0f1f28;
+      padding: 12px 18px;
+      border-radius: 60px;
+    }
+
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #1b3340;
+      padding: 4px 16px;
+      border-radius: 40px;
+    }
+
+    .ctrl-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #bdd4e2;
+    }
+
+    input {
+      background: #0f1e26;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 30px;
+      color: #ffecb3;
+      font-weight: bold;
+      width: 65px;
+      text-align: center;
+      font-size: 1rem;
+      outline: none;
+      box-shadow: inset 0 1px 2px #00000030, 0 1px 0 #3d6b7e;
+    }
+
+    button {
+      background: #2f5a6e;
+      border: none;
+      font-weight: bold;
+      padding: 6px 18px;
+      border-radius: 40px;
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.1s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    button:active {
+      transform: scale(0.96);
+      background: #1f4457;
+    }
+
+    .reset-btn {
+      background: #ff8c42;
+      color: #1e2f2f;
+      box-shadow: 0 2px 8px #ff8c4270;
+    }
+
+    /* 棋盘网格 */
+    .board {
+      display: grid;
+      justify-content: center;
+      gap: 3px;
+      background-color: #0e1a21;
+      padding: 12px;
+      border-radius: 28px;
+      box-shadow: inset 0 0 0 2px #2a4b5e, 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .cell {
+      aspect-ratio: 1 / 1;
+      background: #2f4b5c;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: 0.07s linear;
+      box-shadow: inset 0 -2px 0 #1e3340, 0 1px 3px rgba(0, 0, 0, 0.2);
+      color: #f2e8cf;
+      text-shadow: 0 1px 0px black;
+    }
+
+    /* 翻开样式 */
+    .cell.revealed {
+      background: #dae8ed;
+      box-shadow: inset 0 0 0 1px #bdd4df;
+      cursor: default;
+      color: #0f2a33;
+      text-shadow: none;
+    }
+
+    /* 黑洞特殊效果 */
+    .cell.mine-blast {
+      background: #b91c1c;
+      animation: pulseRed 0.2s ease;
+    }
+
+    /* 标记旗子 */
+    .cell.flagged::before {
+      content: "🚩";
+      font-size: 1.2rem;
+    }
+
+    .cell.flagged {
+      background: #385b6b;
+      color: #ffd966;
+    }
+
+    /* 数字颜色 */
+    .cell[data-value="1"] {
+      color: #1e88e5;
+    }
+
+    .cell[data-value="2"] {
+      color: #43a047;
+    }
+
+    .cell[data-value="3"] {
+      color: #e53935;
+    }
+
+    .cell[data-value="4"] {
+      color: #fb8c00;
+    }
+
+    .cell[data-value="5"] {
+      color: #8e24aa;
+    }
+
+    .cell[data-value="6"] {
+      color: #00acc1;
+    }
+
+    .cell[data-value="7"] {
+      color: #d81b60;
+    }
+
+    .cell[data-value="8"] {
+      color: #6d4c41;
+    }
+
+    @keyframes pulseRed {
+      0% {
+        background: #ff5e5e;
+        transform: scale(0.95);
+      }
+
+      100% {
+        background: #b91c1c;
+        transform: scale(1);
+      }
+    }
+
+    .game-status {
+      text-align: center;
+      margin-top: 16px;
+      font-weight: bold;
+      background: #07161f90;
+      padding: 8px;
+      border-radius: 60px;
+      letter-spacing: 1px;
+      font-size: 1rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .footer-note {
+      font-size: 0.7rem;
+      text-align: center;
+      margin-top: 14px;
+      color: #6b93a8;
+    }
+
+    @media (max-width: 550px) {
+      .game-container {
+        padding: 0.8rem;
+      }
+
+      .cell {
+        font-size: 1rem;
+        border-radius: 8px;
+      }
+
+      .controls {
+        gap: 6px;
+      }
+
+      .ctrl-group {
+        padding: 2px 12px;
+      }
+
+      .stat-value {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="game-container">
+    <div class="proxx-card">
+      <div class="game-header">
+        <div class="title-badge">
+          <h1>⚫ 扫清黑洞 </h1>
+          <div class="sub">扫清黑洞 · 立体声效</div>
+        </div>
+        <div class="stats-panel">
+          <div class="stat"><span class="stat-label">💣 余烬</span><span id="mineCounter" class="stat-value">0</span>
+          </div>
+          <div class="stat"><span class="stat-label">⏱️ 时间</span><span id="timerDisplay" class="stat-value">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="ctrl-group">
+          <label>📏 行</label>
+          <input type="number" id="rowsInput" min="5" max="20" value="9" step="1">
+        </div>
+        <div class="ctrl-group">
+          <label>📐 列</label>
+          <input type="number" id="colsInput" min="5" max="20" value="9" step="1">
+        </div>
+        <div class="ctrl-group">
+          <label>🌑 黑洞数</label>
+          <input type="number" id="minesInput" min="1" max="40" value="10" step="1">
+        </div>
+        <button id="newGameBtn" class="reset-btn">✨ 新对局</button>
+      </div>
+
+      <div id="boardContainer" class="board" style="justify-content: center;"></div>
+      <div id="statusMsg" class="game-status">🎧 左键探格 · 右键标记 · 点击有音效 🔊</div>
+      <div class="footer-note">💡 避开黑洞！数字 = 相邻黑洞数量 · 首次点击必定安全 ✨</div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- 声音特效模块 (Web Audio API，动态合成，不依赖外部文件) ----------
+    let audioCtx = null;
+
+    // 确保音频上下文存在并处于可用状态（按需初始化）
+    async function ensureAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    // 播放短促点击音效 (清脆“嘀”声)
+    async function playClickSound() {
+      try {
+        const ctx = await ensureAudioContext();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.value = 880; // 高音清脆
+        gain.gain.value = 0.25;
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      } catch (e) { console.warn("click sound error", e); }
+    }
+
+    // 播放胜利音效 (明快上升音阶: C5 -> E5 -> G5)
+    async function playWinSound() {
+      try {
+        const ctx = await ensureAudioContext();
+        const now = ctx.currentTime;
+        // 第一个音 C5 (523.25Hz)
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.type = 'sine';
+        osc1.frequency.value = 523.25;
+        gain1.gain.value = 0.3;
+        gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+        osc1.start(now);
+        osc1.stop(now + 0.2);
+
+        // 第二个音 E5 (659.25Hz) 延迟0.15秒
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.type = 'sine';
+        osc2.frequency.value = 659.25;
+        gain2.gain.value = 0.32;
+        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+        osc2.start(now + 0.15);
+        osc2.stop(now + 0.35);
+
+        // 第三个音 G5 (783.99Hz) 更喜悦
+        const osc3 = ctx.createOscillator();
+        const gain3 = ctx.createGain();
+        osc3.connect(gain3);
+        gain3.connect(ctx.destination);
+        osc3.type = 'sine';
+        osc3.frequency.value = 783.99;
+        gain3.gain.value = 0.35;
+        gain3.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+        osc3.start(now + 0.3);
+        osc3.stop(now + 0.5);
+      } catch (e) { console.warn("win sound error", e); }
+    }
+
+    // 播放失败音效 (低沉短促+下降音，代表黑洞引爆)
+    async function playLoseSound() {
+      try {
+        const ctx = await ensureAudioContext();
+        const now = ctx.currentTime;
+        // 低频嗡鸣 + 快速降调
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sawtooth';  // 锯齿波带来粗粝感
+        osc.frequency.value = 200;
+        // 频率快速下滑，制造失败感
+        osc.frequency.exponentialRampToValueAtTime(60, now + 0.35);
+        gain.gain.value = 0.28;
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+        osc.start(now);
+        osc.stop(now + 0.4);
+
+        // 增加一个短促低音鼓般敲击
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.type = 'triangle';
+        osc2.frequency.value = 120;
+        gain2.gain.value = 0.2;
+        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+        osc2.start(now + 0.03);
+        osc2.stop(now + 0.25);
+      } catch (e) { console.warn("lose sound error", e); }
+    }
+
+    // ---------- Proxx 核心逻辑 (类似扫雷，黑洞代替雷) ----------
+    let ROWS = 9;
+    let COLS = 9;
+    let TOTAL_MINES = 10;
+
+    // 游戏数据
+    let board = [];       // 存储每个格子对象 { mine: boolean, adjacentMines: number }
+    let revealed = [];    // boolean 是否翻开
+    let flagged = [];     // boolean 是否标记旗子
+
+    let gameActive = true;     // 游戏未结束 (未输/未赢)
+    let gameWin = false;
+    let firstMoveDone = false;  // 是否已经执行过第一次翻开（用于安全迁移雷）
+    let timerSeconds = 0;
+    let timerInterval = null;
+
+    // DOM 元素
+    const boardContainer = document.getElementById('boardContainer');
+    const mineCounterSpan = document.getElementById('mineCounter');
+    const timerDisplaySpan = document.getElementById('timerDisplay');
+    const rowsInput = document.getElementById('rowsInput');
+    const colsInput = document.getElementById('colsInput');
+    const minesInput = document.getElementById('minesInput');
+    const newGameBtn = document.getElementById('newGameBtn');
+    const statusMsgDiv = document.getElementById('statusMsg');
+
+    // 辅助函数：更新剩余旗子显示（剩余黑洞数 = 总黑洞 - 已放置旗子数量）
+    function updateMineCounter() {
+      if (!gameActive && gameWin) {
+        mineCounterSpan.innerText = '0';
+        return;
+      }
+      const flaggedCount = flagged.flat().filter(v => v === true).length;
+      let remain = TOTAL_MINES - flaggedCount;
+      remain = remain < 0 ? 0 : remain;
+      mineCounterSpan.innerText = remain;
+    }
+
+    // 停止计时器
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    // 开始计时 (仅在首次有效翻开时调用)
+    function startTimerOnFirstMove() {
+      if (timerInterval === null && !gameWin && gameActive && !firstMoveDone) {
+        timerInterval = setInterval(() => {
+          if (gameActive && !gameWin) {
+            timerSeconds++;
+            timerDisplaySpan.innerText = timerSeconds;
+          } else if (!gameActive || gameWin) {
+            if (gameWin || !gameActive) stopTimer();
+          }
+        }, 1000);
+      }
+    }
+
+    // 重置计时 (新游戏)
+    function resetTimer() {
+      stopTimer();
+      timerSeconds = 0;
+      timerDisplaySpan.innerText = "0";
+    }
+
+    // 重新计算整个棋盘周边雷数 (基于board里mine布尔值)
+    function computeAdjacentMines() {
+      for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+          if (board[i][j].mine) {
+            board[i][j].adjacentMines = 0;
+            continue;
+          }
+          let cnt = 0;
+          for (let di = -1; di <= 1; di++) {
+            for (let dj = -1; dj <= 1; dj++) {
+              if (di === 0 && dj === 0) continue;
+              const ni = i + di, nj = j + dj;
+              if (ni >= 0 && ni < ROWS && nj >= 0 && nj < COLS && board[ni][nj].mine) cnt++;
+            }
+          }
+          board[i][j].adjacentMines = cnt;
+        }
+      }
+    }
+
+    // 随机生成棋盘 (黑洞随机分布)
+    function generateRandomBoard(firstSafeRow = -1, firstSafeCol = -1) {
+      let newBoard = Array(ROWS).fill().map(() => Array(COLS).fill().map(() => ({ mine: false, adjacentMines: 0 })));
+      let minesPlaced = 0;
+      const totalCells = ROWS * COLS;
+      let maxMines = Math.min(TOTAL_MINES, totalCells - 1);
+      if (TOTAL_MINES > totalCells - 1) maxMines = totalCells - 1;
+
+      let forbiddenSet = new Set();
+      if (firstSafeRow !== -1 && firstSafeCol !== -1) {
+        forbiddenSet.add(`${firstSafeRow},${firstSafeCol}`);
+      }
+
+      while (minesPlaced < maxMines) {
+        const randRow = Math.floor(Math.random() * ROWS);
+        const randCol = Math.floor(Math.random() * COLS);
+        const key = `${randRow},${randCol}`;
+        if (!newBoard[randRow][randCol].mine && !forbiddenSet.has(key)) {
+          newBoard[randRow][randCol].mine = true;
+          minesPlaced++;
+        }
+      }
+      TOTAL_MINES = minesPlaced;
+      minesInput.value = TOTAL_MINES;
+
+      for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+          if (newBoard[i][j].mine) continue;
+          let cnt = 0;
+          for (let di = -1; di <= 1; di++) {
+            for (let dj = -1; dj <= 1; dj++) {
+              if (di === 0 && dj === 0) continue;
+              const ni = i + di, nj = j + dj;
+              if (ni >= 0 && ni < ROWS && nj >= 0 && nj < COLS && newBoard[ni][nj].mine) cnt++;
+            }
+          }
+          newBoard[i][j].adjacentMines = cnt;
+        }
+      }
+      return newBoard;
+    }
+
+    // 重置游戏状态 (新游戏，根据当前参数重新生成)
+    function initNewGame(safeRow = -1, safeCol = -1) {
+      let newRows = parseInt(rowsInput.value, 10);
+      let newCols = parseInt(colsInput.value, 10);
+      let newMines = parseInt(minesInput.value, 10);
+
+      if (isNaN(newRows)) newRows = 9;
+      if (isNaN(newCols)) newCols = 9;
+      if (isNaN(newMines)) newMines = 10;
+      newRows = Math.min(20, Math.max(5, newRows));
+      newCols = Math.min(20, Math.max(5, newCols));
+      const maxPossible = newRows * newCols - 1;
+      if (newMines > maxPossible) newMines = maxPossible;
+      if (newMines < 1) newMines = 1;
+
+      ROWS = newRows;
+      COLS = newCols;
+      TOTAL_MINES = newMines;
+
+      rowsInput.value = ROWS;
+      colsInput.value = COLS;
+      minesInput.value = TOTAL_MINES;
+
+      let freshBoard;
+      if (safeRow !== -1 && safeCol !== -1 && safeRow < ROWS && safeCol >= 0) {
+        freshBoard = generateRandomBoard(safeRow, safeCol);
+      } else {
+        freshBoard = generateRandomBoard();
+      }
+      board = freshBoard;
+
+      revealed = Array(ROWS).fill().map(() => Array(COLS).fill(false));
+      flagged = Array(ROWS).fill().map(() => Array(COLS).fill(false));
+      gameActive = true;
+      gameWin = false;
+      firstMoveDone = false;
+
+      resetTimer();
+      statusMsgDiv.innerHTML = "🎧 新对局！左键探格 · 右键标记 · 立体音效 🔊";
+      statusMsgDiv.style.background = "#07161f90";
+
+      updateMineCounter();
+      renderBoard();
+    }
+
+    // 首次点击遇到黑洞时，迁移黑洞 (安全机制，保证不炸)
+    function relocateMineAwayFrom(row, col) {
+      if (!board[row][col].mine) return false;
+      let safeSpots = [];
+      for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+          if (!board[i][j].mine && !(i === row && j === col)) {
+            safeSpots.push([i, j]);
+          }
+        }
+      }
+      if (safeSpots.length === 0) return false;
+      const [newRow, newCol] = safeSpots[Math.floor(Math.random() * safeSpots.length)];
+      board[row][col].mine = false;
+      board[newRow][newCol].mine = true;
+      computeAdjacentMines();
+      return true;
+    }
+
+    // 胜利判定 + 播放胜利音效 (保证只触发一次)
+    function checkWin() {
+      if (!gameActive || gameWin) return false;
+      let safeCellsRevealed = 0;
+      const totalSafeCells = ROWS * COLS - TOTAL_MINES;
+      for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+          if (!board[i][j].mine && revealed[i][j]) safeCellsRevealed++;
+        }
+      }
+      if (safeCellsRevealed === totalSafeCells) {
+        gameWin = true;
+        gameActive = false;
+        stopTimer();
+        statusMsgDiv.innerHTML = "🎉 胜利！ 清除了所有黑洞！ 🎉 胜利音效响起 🎶";
+        statusMsgDiv.style.background = "#2b7a3e90";
+        renderBoard();
+        // 播放胜利音效
+        playWinSound();
+        return true;
+      }
+      return false;
+    }
+
+    // 游戏失败，展示所有黑洞 并播放失败音效
+    function loseGame(triggerRow, triggerCol) {
+      if (!gameActive || gameWin) return;
+      gameActive = false;
+      stopTimer();
+      statusMsgDiv.innerHTML = "💥 触发黑洞！ 游戏结束... 低沉音效哀鸣 💥";
+      statusMsgDiv.style.background = "#8b2c2d90";
+      for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+          if (board[i][j].mine) {
+            revealed[i][j] = true;
+          }
+        }
+      }
+      renderBoard();
+      // 播放失败音效
+      playLoseSound();
+    }
+
+    // 递归展开空白区域 (0区域)
+    function expandZeroRegion(row, col) {
+      if (!gameActive || gameWin) return;
+      if (revealed[row][col]) return;
+      if (flagged[row][col]) return;
+
+      revealed[row][col] = true;
+      if (board[row][col].adjacentMines !== 0) return;
+
+      for (let di = -1; di <= 1; di++) {
+        for (let dj = -1; dj <= 1; dj++) {
+          if (di === 0 && dj === 0) continue;
+          const ni = row + di, nj = col + dj;
+          if (ni >= 0 && ni < ROWS && nj >= 0 && nj < COLS && !revealed[ni][nj] && !flagged[ni][nj] && !board[ni][nj].mine) {
+            expandZeroRegion(ni, nj);
+          }
+        }
+      }
+    }
+
+    // 普通翻开格子 (核心) —— 只有用户主动点击才会触发声音，递归展开无额外音效
+    function revealCell(row, col, isUserTriggered = true) {
+      if (!gameActive || gameWin) return false;
+      if (revealed[row][col]) return false;
+      if (flagged[row][col]) return false;
+
+      // 首次移动计时器触发
+      if (!firstMoveDone) {
+        startTimerOnFirstMove();
+        firstMoveDone = true;
+      }
+
+      // 若当前是黑洞 → 失败 (同时失败音效会在loseGame里播放)
+      if (board[row][col].mine) {
+        loseGame(row, col);
+        return false;
+      }
+
+      // 播放点击音效（仅用户主动点击）
+      if (isUserTriggered) {
+        playClickSound();
+      }
+
+      const adjacentMines = board[row][col].adjacentMines;
+      if (adjacentMines === 0) {
+        expandZeroRegion(row, col);
+      } else {
+        revealed[row][col] = true;
+      }
+
+      renderBoard();
+      checkWin();
+      return true;
+    }
+
+    // 标记 / 取消标记旗子 (无声音)
+    function toggleFlag(row, col) {
+      if (!gameActive || gameWin) return false;
+      if (revealed[row][col]) return false;
+
+      flagged[row][col] = !flagged[row][col];
+      updateMineCounter();
+      renderBoard();
+      return true;
+    }
+
+    // ---------- 渲染网格 ----------
+    function renderBoard() {
+      if (!boardContainer) return;
+      boardContainer.style.gridTemplateColumns = `repeat(${COLS}, minmax(40px, 70px))`;
+      boardContainer.innerHTML = '';
+
+      for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          if (revealed[i][j]) {
+            cell.classList.add('revealed');
+            if (board[i][j].mine) {
+              cell.classList.add('mine-blast');
+              cell.innerText = '💀';
+            } else {
+              const val = board[i][j].adjacentMines;
+              if (val === 0) {
+                cell.innerText = '';
+              } else {
+                cell.innerText = val;
+                cell.setAttribute('data-value', val);
+              }
+            }
+          } else {
+            if (flagged[i][j]) {
+              cell.classList.add('flagged');
+              cell.innerText = '';
+            } else {
+              cell.innerText = '?';
+              cell.style.fontWeight = 'bold';
+              cell.style.fontSize = '1.2rem';
+            }
+          }
+
+          cell.setAttribute('data-row', i);
+          cell.setAttribute('data-col', j);
+
+          // 左键点击 (用户主动触发，播放点击音效)
+          cell.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const r = parseInt(cell.getAttribute('data-row'), 10);
+            const c = parseInt(cell.getAttribute('data-col'), 10);
+            if (!gameActive || gameWin) return;
+
+            // 第一手安全迁移逻辑 (如果是黑洞，重排并自动翻开)
+            if (!firstMoveDone && !revealed[r][c] && !flagged[r][c] && board[r][c].mine) {
+              const safeBoard = generateRandomBoard(r, c);
+              board = safeBoard;
+              revealed = Array(ROWS).fill().map(() => Array(COLS).fill(false));
+              flagged = Array(ROWS).fill().map(() => Array(COLS).fill(false));
+              renderBoard();
+              // 重新调用翻开(用户触发)
+              revealCell(r, c, true);
+              if (!firstMoveDone) {
+                startTimerOnFirstMove();
+                firstMoveDone = true;
+              }
+              return;
+            }
+            // 正常翻开（传入isUserTriggered = true 播放音效）
+            revealCell(r, c, true);
+          });
+
+          // 右键标记 (无声音特效)
+          cell.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            const r = parseInt(cell.getAttribute('data-row'), 10);
+            const c = parseInt(cell.getAttribute('data-col'), 10);
+            if (!gameActive || gameWin) return false;
+            toggleFlag(r, c);
+            return false;
+          });
+
+          boardContainer.appendChild(cell);
+        }
+      }
+      updateMineCounter();
+    }
+
+    function syncInputBound() {
+      let r = parseInt(rowsInput.value, 10);
+      let c = parseInt(colsInput.value, 10);
+      let m = parseInt(minesInput.value, 10);
+      if (isNaN(r)) r = 9;
+      if (isNaN(c)) c = 9;
+      if (isNaN(m)) m = 10;
+      r = Math.min(20, Math.max(5, r));
+      c = Math.min(20, Math.max(5, c));
+      const maxMines = r * c - 1;
+      if (m > maxMines) m = maxMines;
+      if (m < 1) m = 1;
+      rowsInput.value = r;
+      colsInput.value = c;
+      minesInput.value = m;
+    }
+
+    function newGameFromSettings() {
+      syncInputBound();
+      ROWS = parseInt(rowsInput.value, 10);
+      COLS = parseInt(colsInput.value, 10);
+      TOTAL_MINES = parseInt(minesInput.value, 10);
+      const freshBoard = generateRandomBoard();
+      board = freshBoard;
+      revealed = Array(ROWS).fill().map(() => Array(COLS).fill(false));
+      flagged = Array(ROWS).fill().map(() => Array(COLS).fill(false));
+      gameActive = true;
+      gameWin = false;
+      firstMoveDone = false;
+      resetTimer();
+      statusMsgDiv.innerHTML = "🎧 新对局！点击方块伴随清脆音效 🔊";
+      statusMsgDiv.style.background = "#07161f90";
+      renderBoard();
+      updateMineCounter();
+    }
+
+    newGameBtn.addEventListener('click', () => {
+      newGameFromSettings();
+    });
+
+    rowsInput.addEventListener('change', () => { let val = parseInt(rowsInput.value, 10); if (val < 5) rowsInput.value = 5; if (val > 20) rowsInput.value = 20; syncInputBound(); });
+    colsInput.addEventListener('change', () => { let val = parseInt(colsInput.value, 10); if (val < 5) colsInput.value = 5; if (val > 20) colsInput.value = 20; syncInputBound(); });
+    minesInput.addEventListener('change', () => { syncInputBound(); });
+
+    // 启动游戏
+    initNewGame();
+  </script>
+</body>
+
+</html>

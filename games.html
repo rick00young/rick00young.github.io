@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>全部游戏 · AI游乐场</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="static/css/style.css">
+  <style>
+    .sort-select.active-btn { background: #4c5fd7; border-color: #4c5fd7; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="navbar"></div>
+
+    <!-- 面包屑 -->
+    <div class="breadcrumb" id="breadcrumb"></div>
+
+    <!-- 页面标题 + 排序 -->
+    <div class="page-header">
+      <h2 id="pageTitle">🎯 全部AI游戏</h2>
+      <div class="filter-sort">
+        <span style="font-size:0.8rem;color:#8f96c0;">排序：</span>
+        <a href="#" class="sort-select" data-sort="hot" onclick="setSort('hot');return false;">🔥 热门</a>
+        <a href="#" class="sort-select" data-sort="new" onclick="setSort('new');return false;">🆕 最新</a>
+        <a href="#" class="sort-select" data-sort="star" onclick="setSort('star');return false;">⭐ 评分</a>
+      </div>
+    </div>
+
+    <!-- 筛选芯片 -->
+    <div class="filter-chips" id="filterChips"></div>
+
+    <!-- 游戏网格 -->
+    <div class="game-grid" id="gameGrid"></div>
+    <div id="emptyState" style="display:none;">
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <p>没有找到匹配的游戏，试试其他关键词或分类</p>
+        <br>
+        <a href="games.html" class="btn-outline-light" style="display:inline-block;">查看全部游戏</a>
+      </div>
+    </div>
+
+    <!-- 分页 -->
+    <div class="pagination" id="pagination"></div>
+
+    <div id="footer"></div>
+  </div>
+
+  <script src="static/js/data.js"></script>
+  <script src="static/js/app.js"></script>
+  <script>
+    const PAGE_SIZE = 12;
+    let currentType = '';
+    let currentSort = 'hot';
+    let currentSearch = '';
+    let currentPage = 1;
+
+    function loadGames() {
+      const params = new URLSearchParams(window.location.search);
+      currentSearch = params.get('search') || '';
+      currentType = params.get('type') || '';
+      currentSort = params.get('sort') || 'hot';
+      currentPage = parseInt(params.get('page')) || 1;
+
+      // Title
+      const titleEl = document.getElementById('pageTitle');
+      if (currentSearch) {
+        titleEl.innerHTML = '🔍 搜索 "' + currentSearch + '"';
+      } else if (currentType) {
+        titleEl.innerHTML = currentType + ' 游戏';
+      } else {
+        titleEl.innerHTML = '🎯 全部AI游戏';
+      }
+
+      // Breadcrumb
+      renderBreadcrumb([
+        { label: '首页', link: '/' },
+        { label: '全部游戏', link: 'games.html' }
+      ], 'breadcrumb');
+
+      // Filter data
+      let filteredGames;
+      if (currentSearch) {
+        filteredGames = searchGames(currentSearch);
+      } else if (currentType) {
+        filteredGames = getGamesByType(currentType);
+      } else {
+        filteredGames = getAllGames();
+      }
+
+      // Sort
+      if (currentSort === 'new') {
+        filteredGames.sort((a, b) => (b.create_time || '').localeCompare(a.create_time || ''));
+      } else if (currentSort === 'star') {
+        filteredGames.sort((a, b) => (b.game_star || 0) - (a.game_star || 0));
+      } else {
+        filteredGames.sort((a, b) => (b.play_count || 0) - (a.play_count || 0));
+      }
+
+      // Update title count
+      const total = filteredGames.length;
+      const titleText = titleEl.textContent;
+      if (!titleText.includes('(')) {
+        titleEl.innerHTML = titleEl.innerHTML + ' <span style="font-size:0.9rem;font-weight:400;color:#8f96c0;margin-left:0.5rem;">(' + total + ' 款)</span>';
+      } else {
+        titleEl.innerHTML = titleEl.innerHTML.replace(/\(\d+ 款\)/, '(' + total + ' 款)');
+      }
+
+      // Pagination
+      const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+      currentPage = Math.max(1, Math.min(currentPage, totalPages));
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+      const pageGames = filteredGames.slice(start, end);
+
+      // Render
+      const grid = document.getElementById('gameGrid');
+      const empty = document.getElementById('emptyState');
+      if (pageGames.length > 0) {
+        grid.style.display = '';
+        empty.style.display = 'none';
+        renderGameCards(pageGames, 'gameGrid');
+      } else {
+        grid.style.display = 'none';
+        empty.style.display = '';
+      }
+
+      // Pagination
+      const pagEl = document.getElementById('pagination');
+      if (totalPages > 1) {
+        let phtml = '';
+        for (let p = 1; p <= totalPages; p++) {
+          const q = buildQuery({ page: p });
+          phtml += '<a href="games.html?' + q + '" class="page-btn' + (p === currentPage ? ' active' : '') + '">' + p + '</a>';
+        }
+        pagEl.innerHTML = phtml;
+        pagEl.style.display = '';
+      } else {
+        pagEl.style.display = 'none';
+      }
+
+      // Sort buttons
+      document.querySelectorAll('.sort-select').forEach(el => {
+        el.classList.toggle('active-btn', el.dataset.sort === currentSort);
+      });
+
+      // Filter chips
+      renderFilterChips();
+
+      // Window title
+      document.title = '全部游戏 · AI游乐场' + (currentType ? ' - ' + currentType : '');
+    }
+
+    function renderFilterChips() {
+      const types = getGameTypes();
+      let html = '<a href="games.html" class="filter-chip' + (!currentType && !currentSearch ? ' active' : '') + '"><i class="fas fa-th-large"></i> 全部</a>';
+      types.forEach(t => {
+        const q = buildQuery({ type: t, page: 1 });
+        html += '<a href="games.html?' + q + '" class="filter-chip' + (currentType === t ? ' active' : '') + '">' + t + '</a>';
+      });
+      document.getElementById('filterChips').innerHTML = html;
+    }
+
+    function buildQuery(overrides) {
+      const params = {};
+      if (currentSearch) params.search = currentSearch;
+      if (currentType && !overrides.type) params.type = currentType;
+      if (currentSort && !overrides.sort) params.sort = currentSort;
+      if (currentPage && !overrides.page) params.page = currentPage;
+      Object.assign(params, overrides);
+      for (const k in params) {
+        if (!params[k]) delete params[k];
+      }
+      return new URLSearchParams(params).toString();
+    }
+
+    function setSort(sort) {
+      const q = buildQuery({ sort: sort, page: 1, type: currentType || undefined });
+      window.location.href = 'games.html?' + q;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      renderNavBar('navbar');
+      renderFooter('footer');
+      loadGames();
+    });
+  </script>
+</body>
+</html>
