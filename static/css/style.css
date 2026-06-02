@@ -2,7 +2,6 @@
    🎮 AI游乐场 · 无限AI小游戏市场
    合并样式表（备份UI + 项目原有样式）
    ============================================= */
-
 /* ---------- CSS变量 ---------- */
 :root {
     --bg-primary: #0a0a1a;
@@ -27,18 +26,15 @@
     --radius-xl: 30px;
     --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 /* ---------- 全局重置 ---------- */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
 html {
     scroll-behavior: smooth;
 }
-
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background: linear-gradient(145deg, #0a0a1a 0%, #0c0c24 100%);
@@ -47,21 +43,17 @@ body {
     overflow-x: hidden;
     min-height: 100vh;
 }
-
 a { text-decoration: none; color: inherit; }
 img { max-width: 100%; display: block; }
-
 /* 自定义滚动条 */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: #1e1e30; border-radius: 10px; }
 ::-webkit-scrollbar-thumb { background: #5f6caf; border-radius: 10px; }
-
 .container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 2rem;
 }
-
 /* ---------- 导航栏 ---------- */
 .navbar {
     display: flex;
@@ -119,7 +111,6 @@ img { max-width: 100%; display: block; }
     transition: var(--transition);
 }
 .search-bar button:hover { background: #6a7eff; }
-
 .nav-actions {
     display: flex;
     gap: 0.8rem;
@@ -134,7 +125,6 @@ img { max-width: 100%; display: block; }
     transition: var(--transition);
 }
 .nav-actions i:hover { background: var(--accent-3); }
-
 .btn-outline-light {
     background: transparent;
     border: 1px solid #6c7ef0;
@@ -147,7 +137,6 @@ img { max-width: 100%; display: block; }
     font-size: 0.85rem;
 }
 .btn-outline-light:hover { background: #6c7ef0; color: white; }
-
 /* ---------- Hero 区域 ---------- */
 .hero {
     padding: 2.5rem 0;
@@ -204,7 +193,6 @@ img { max-width: 100%; display: block; }
     font-size: 0.75rem;
     color: #8a92c0;
 }
-
 /* Hero 右侧装饰 */
 .hero-illustration {
     flex: 0 0 440px;
@@ -213,10 +201,6 @@ img { max-width: 100%; display: block; }
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(100, 120, 200, 0.2);
-    background-image: url('./index_bg.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     box-shadow: 0 8px 40px rgba(108, 92, 231, 0.2), inset 0 0 80px rgba(10, 10, 26, 0.35);
     transition: var(--transition);
 }
@@ -232,7 +216,6 @@ img { max-width: 100%; display: block; }
     background: linear-gradient(135deg, rgba(108, 92, 231, 0.15), transparent, rgba(0, 206, 201, 0.1));
     z-index: -1;
 }
-
 /* ---------- 分类芯片 ---------- */
 .cat-chips {
     display: flex;
@@ -252,7 +235,6 @@ img { max-width: 100%; display: block; }
 }
 .cat-chip:hover { border-color: #5f70d0; background: rgba(76, 95, 215, 0.15); }
 .cat-chip.active { background: var(--accent-3); border-color: var(--accent-3); color: white; }
-
 /* ---------- 游戏卡片网格 ---------- */
 .game-grid {
     display: grid;
@@ -260,7 +242,6 @@ img { max-width: 100%; display: block; }
     gap: 1.2rem;
     margin: 1.5rem 0;
 }
-
 .game-card {
     background: var(--bg-card);
     border-radius: var(--radius-md);
@@ -280,8 +261,6 @@ img { max-width: 100%; display: block; }
     margin-bottom: 0.6rem;
     position: relative;
 }
-
-
 /* 游戏封面图片 */
 .game-img {
   height: 140px;
@@ -317,7 +296,6 @@ img { max-width: 100%; display: block; }
 .preview-window {
   padding: 12px;
 }
-
 .ai-badge {
     position: absolute;
     top: 0;
@@ -355,7 +333,6 @@ img { max-width: 100%; display: block; }
     font-size: 0.75rem;
     color: #8f96c0;
 }
-
 /* ---------- 双栏布局（首页热门+最新） ---------- */
 .double-col {
     display: grid;
@@ -366,7 +343,6 @@ img { max-width: 100%; display: block; }
 @media (max-width: 700px) {
     .double-col { grid-template-columns: 1fr; }
 }
-
 .rank-list, .new-list {
     background: var(--bg-card);
     border-radius: var(--radius-md);
@@ -424,7 +400,6 @@ img { max-width: 100%; display: block; }
 .rank-name { flex: 1; font-size: 0.9rem; font-weight: 500; }
 .rank-score { font-size: 0.75rem; color: #8f96c0; white-space: nowrap; }
 .new-item i { width: 20px; color: #8f9eff; }
-
 /* ---------- AI生成器区块 ---------- */
 .ai-generator {
     background: linear-gradient(135deg, #0f1235, #1a1f45);
@@ -471,7 +446,6 @@ img { max-width: 100%; display: block; }
     font-size: 0.9rem;
 }
 .generate-btn:hover { transform: scale(1.03); box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3); }
-
 /* ---------- 页脚 ---------- */
 footer {
     text-align: center;
@@ -483,11 +457,9 @@ footer {
     line-height: 2;
 }
 footer i { margin: 0 0.3rem; }
-
 /* =============================================
    列表页样式
    ============================================= */
-
 /* 面包屑 */
 .breadcrumb {
     margin: 1.5rem 0 1rem;
@@ -496,7 +468,6 @@ footer i { margin: 0 0.3rem; }
 }
 .breadcrumb a { color: #9aabff; }
 .breadcrumb a:hover { text-decoration: underline; }
-
 /* 页面标题栏 + 排序筛选 */
 .page-header {
     display: flex;
@@ -523,7 +494,6 @@ footer i { margin: 0 0.3rem; }
     cursor: pointer;
     outline: none;
 }
-
 /* 筛选芯片 */
 .filter-chips {
     display: flex;
@@ -543,7 +513,6 @@ footer i { margin: 0 0.3rem; }
 }
 .filter-chip:hover { border-color: #5f70d0; }
 .filter-chip.active { background: var(--accent-3); border-color: var(--accent-3); color: white; }
-
 /* 分页 */
 .pagination {
     display: flex;
@@ -564,7 +533,6 @@ footer i { margin: 0 0.3rem; }
 }
 .page-btn:hover { border-color: #5f70d0; }
 .page-btn.active { background: var(--accent-3); border-color: var(--accent-3); color: white; }
-
 /* 空状态 */
 .empty-state {
     text-align: center;
@@ -573,11 +541,9 @@ footer i { margin: 0 0.3rem; }
 }
 .empty-state .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
 .empty-state p { color: var(--text-muted); }
-
 /* =============================================
    详情页样式
    ============================================= */
-
 .detail-main {
     display: grid;
     grid-template-columns: 1fr 0.9fr;
@@ -587,7 +553,6 @@ footer i { margin: 0 0.3rem; }
 @media (max-width: 900px) {
     .detail-main { grid-template-columns: 1fr; }
 }
-
 /* 游戏预览卡片 */
 .game-preview {
     background: #11152f;
@@ -639,7 +604,6 @@ footer i { margin: 0 0.3rem; }
     width: 100%;
 }
 .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(108, 92, 231, 0.4); }
-
 /* 信息面板 */
 .info-panel {
     background: var(--bg-card);
@@ -673,7 +637,6 @@ footer i { margin: 0 0.3rem; }
     font-size: 0.85rem;
 }
 .info-stats i { margin-right: 0.3rem; color: #8f9eff; }
-
 /* Tab 区块 */
 .tab-bar {
     display: flex;
@@ -693,7 +656,6 @@ footer i { margin: 0 0.3rem; }
 .tab-item:hover { color: white; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-
 /* 评论区 */
 .comment-item {
     padding: 0.7rem 0;
@@ -728,7 +690,6 @@ footer i { margin: 0 0.3rem; }
     cursor: pointer;
     transition: var(--transition);
 }
-
 /* 成就列表 */
 .achievement-item {
     display: flex;
@@ -742,7 +703,6 @@ footer i { margin: 0 0.3rem; }
 .achievement-icon { font-size: 1.5rem; }
 .achievement-desc strong { display: block; font-size: 0.9rem; }
 .achievement-desc span { font-size: 0.75rem; color: #8f96c0; }
-
 /* 相关推荐 */
 .related-section { margin: 2rem 0; }
 .related-section h3 { font-size: 1.2rem; margin-bottom: 1rem; }
@@ -767,7 +727,6 @@ footer i { margin: 0 0.3rem; }
 .rel-img { font-size: 2.5rem; margin-bottom: 0.5rem; }
 .rel-card .game-title { font-size: 0.9rem; }
 .rel-card .game-meta { font-size: 0.7rem; justify-content: center; gap: 0.5rem; }
-
 /* ---------- 按钮通用 ---------- */
 .btn {
     display: inline-flex;
@@ -788,7 +747,6 @@ footer i { margin: 0 0.3rem; }
     color: white;
 }
 .btn-primary:hover { transform: translateY(-2px); }
-
 /* ---------- 动画 ---------- */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(20px); }
@@ -802,7 +760,6 @@ footer i { margin: 0 0.3rem; }
 .game-card:nth-child(4) { animation-delay: 0.15s; }
 .game-card:nth-child(5) { animation-delay: 0.2s; }
 .game-card:nth-child(6) { animation-delay: 0.25s; }
-
 /* ---------- 响应式 ---------- */
 @media (max-width: 768px) {
     .container { padding: 0 1rem; }
@@ -812,7 +769,6 @@ footer i { margin: 0 0.3rem; }
     .hero-stats { gap: 1rem; }
     .hero-stat strong { font-size: 1.2rem; }
 }
-
 @media (max-width: 480px) {
     .game-grid { grid-template-columns: 1fr; }
     .cat-chips { gap: 0.4rem; }
@@ -823,11 +779,9 @@ footer i { margin: 0 0.3rem; }
     .search-bar { max-width: 100%; }
     .nav-actions { justify-content: flex-end; }
 }
-
 /* =============================================
    📖 关于我们页
    ============================================= */
-
 /* Hero 区域 */
 .about-hero {
     padding: 4rem 0 3rem;
@@ -876,7 +830,6 @@ footer i { margin: 0 0.3rem; }
     max-width: 600px;
     margin: 0 auto;
 }
-
 /* 通用章节 */
 .about-section {
     margin: 3rem 0;
@@ -910,7 +863,6 @@ footer i { margin: 0 0.3rem; }
     background-clip: text;
     color: transparent;
 }
-
 /* 故事段落 */
 .about-story p {
     font-size: 1rem;
@@ -919,7 +871,6 @@ footer i { margin: 0 0.3rem; }
     margin-bottom: 1.2rem;
 }
 .about-story p:last-child { margin-bottom: 0; }
-
 /* 理念网格 */
 .philosophy-grid {
     display: grid;
@@ -965,7 +916,6 @@ footer i { margin: 0 0.3rem; }
     color: var(--text-muted);
     line-height: 1.6;
 }
-
 /* 加入我们网格 */
 .join-grid {
     display: grid;
@@ -1003,7 +953,6 @@ footer i { margin: 0 0.3rem; }
     color: var(--text-muted);
     line-height: 1.6;
 }
-
 /* 底部标语 */
 .about-footer-quote {
     text-align: center;
@@ -1024,7 +973,6 @@ footer i { margin: 0 0.3rem; }
     font-size: 0.9rem;
     color: var(--text-muted);
 }
-
 /* 关于页响应式 */
 @media (max-width: 768px) {
     .about-section { padding: 1.5rem; }
@@ -1036,7 +984,6 @@ footer i { margin: 0 0.3rem; }
 @media (max-width: 480px) {
     .join-grid { grid-template-columns: 1fr; }
 }
-
 /* =============================================
    补充样式（静态站点）
    ============================================= */
