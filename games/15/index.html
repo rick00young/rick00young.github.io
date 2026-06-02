@@ -1,38 +1,178 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>扫清黑洞 · AI游乐场</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="../../static/css/style.css">
   <style>
-    .play-fullscreen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: #0a0a1a; display: flex; flex-direction: column; }
-    .play-header { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1.5rem; background: #0c0c24; border-bottom: 1px solid rgba(100,120,200,0.2); flex-shrink: 0; }
-    .btn-back { background: rgba(76,95,215,0.2); border: 1px solid rgba(100,120,200,0.3); padding: 0.4rem 1rem; border-radius: 30px; color: #d0d6ff; cursor: pointer; font-size: 0.85rem; transition: all 0.25s; }
-    .btn-back:hover { background: #4c5fd7; color: white; }
-    .play-title { flex: 1; font-weight: 600; font-size: 1rem; color: #edeef5; }
-    .play-badge { font-size: 0.75rem; color: #8f9eff; background: rgba(143,158,255,0.1); padding: 0.2rem 0.8rem; border-radius: 30px; }
-    .game-iframe { flex: 1; width: 100%; border: none; background: #0a0a1a; }
-    @media (max-width: 768px) { .play-header { padding: 0.5rem 1rem; flex-wrap: wrap; } .play-title { font-size: 0.9rem; order: 3; flex-basis: 100%; } }
-    .game-preview { display: flex; flex-direction: column; max-height: 500px; }
-    .preview-content { flex: 1; min-height: 0; }
-    .info-panel { max-height: 500px; display: flex; flex-direction: column; }
-    .info-panel .tab-content { overflow: hidden; min-height: 0; }
-    .info-panel .tab-content.active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
-    #commentsList { flex: 1; min-height: 0; overflow-y: auto; }
-    #tab-achievements { overflow-y: auto; }
-    .preview-content::-webkit-scrollbar, #commentsList::-webkit-scrollbar, #tab-achievements::-webkit-scrollbar { width: 4px; }
-    .preview-content::-webkit-scrollbar-track, #commentsList::-webkit-scrollbar-track, #tab-achievements::-webkit-scrollbar-track { background: transparent; }
-    .preview-content::-webkit-scrollbar-thumb, #commentsList::-webkit-scrollbar-thumb, #tab-achievements::-webkit-scrollbar-thumb { background: #3d4470; border-radius: 4px; }
-    .intro-body { padding: 1.2rem; }
-    .intro-block { margin-bottom: 1rem; }
-    .intro-block:last-child { margin-bottom: 0; }
-    .intro-title { font-size: 0.85rem; font-weight: 700; color: var(--accent-2, #8f9eff); margin-bottom: 0.3rem; padding-left: 0.5rem; border-left: 3px solid var(--accent-1, #6c5ce7); }
-    .intro-text { font-size: 0.82rem; line-height: 1.7; color: var(--text-secondary, #b9c0e6); padding-left: 0.5rem; white-space: pre-wrap; }
+    .play-fullscreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 9999;
+      background: #0a0a1a;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .play-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1.5rem;
+      background: #0c0c24;
+      border-bottom: 1px solid rgba(100, 120, 200, 0.2);
+      flex-shrink: 0;
+    }
+
+    .btn-back {
+      background: rgba(76, 95, 215, 0.2);
+      border: 1px solid rgba(100, 120, 200, 0.3);
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      color: #d0d6ff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.25s;
+    }
+
+    .btn-back:hover {
+      background: #4c5fd7;
+      color: white;
+    }
+
+    .play-title {
+      flex: 1;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #edeef5;
+    }
+
+    .play-badge {
+      font-size: 0.75rem;
+      color: #8f9eff;
+      background: rgba(143, 158, 255, 0.1);
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+    }
+
+    .game-iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: #0a0a1a;
+    }
+
+    @media (max-width: 768px) {
+      .play-header {
+        padding: 0.5rem 1rem;
+        flex-wrap: wrap;
+      }
+
+      .play-title {
+        font-size: 0.9rem;
+        order: 3;
+        flex-basis: 100%;
+      }
+    }
+
+    .game-preview {
+      display: flex;
+      flex-direction: column;
+      max-height: 500px;
+    }
+
+    .preview-content {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .info-panel {
+      max-height: 500px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-panel .tab-content {
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .info-panel .tab-content.active {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+
+    #commentsList {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+    }
+
+    #tab-achievements {
+      overflow-y: auto;
+    }
+
+    .preview-content::-webkit-scrollbar,
+    #commentsList::-webkit-scrollbar,
+    #tab-achievements::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .preview-content::-webkit-scrollbar-track,
+    #commentsList::-webkit-scrollbar-track,
+    #tab-achievements::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .preview-content::-webkit-scrollbar-thumb,
+    #commentsList::-webkit-scrollbar-thumb,
+    #tab-achievements::-webkit-scrollbar-thumb {
+      background: #3d4470;
+      border-radius: 4px;
+    }
+
+    .intro-body {
+      padding: 1.2rem;
+    }
+
+    .intro-block {
+      margin-bottom: 1rem;
+    }
+
+    .intro-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .intro-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-2, #8f9eff);
+      margin-bottom: 0.3rem;
+      padding-left: 0.5rem;
+      border-left: 3px solid var(--accent-1, #6c5ce7);
+    }
+
+    .intro-text {
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: var(--text-secondary, #b9c0e6);
+      padding-left: 0.5rem;
+      white-space: pre-wrap;
+    }
   </style>
 </head>
+
 <body>
   <div id="playFullscreen" class="play-fullscreen" style="display:none;">
     <div class="play-header">
@@ -47,7 +187,7 @@
     <div id="navbar"></div>
 
     <div class="breadcrumb">
-      <a href="../..">首页</a> &gt;
+      <a href="../../index.html">首页</a> &gt;
       <a href="../../games.html">全部游戏</a> &gt;
       <span>扫清黑洞</span>
     </div>
@@ -87,67 +227,71 @@
         <p style="color:#b9c0e6;font-size:0.9rem;line-height:1.7;margin:0.8rem 0;">避开黑洞，点亮数字——用逻辑扫清每一寸未知。</p>
 
         <div class="tab-bar">
-          <div class="tab-item active" id="tabInfoComments"><i class="fas fa-comment"></i> 玩家点评 <span id="commentCount">(5)</span></div>
+          <div class="tab-item active" id="tabInfoComments"><i class="fas fa-comment"></i> 玩家点评 <span
+              id="commentCount">(5)</span></div>
           <div class="tab-item" id="tabInfoAch"><i class="fas fa-trophy"></i> 成就</div>
         </div>
 
         <div id="tab-comments" class="tab-content active">
           <div id="commentsList">
-              <div class="comment-item">
-                <strong>💡 逻辑之光</strong> · <span style="font-size:0.7rem;">10分钟前</span><br>
-                黑洞机制太有趣了！每一步都要精心计算，根本停不下来。
-              </div>
-              <div class="comment-item">
-                <strong>🌌 星际探险家</strong> · <span style="font-size:0.7rem;">1小时前</span><br>
-                AI生成的关卡越来越巧妙，难度曲线非常完美。
-              </div>
-              <div class="comment-item">
-                <strong>🧠 谜题大师</strong> · <span style="font-size:0.7rem;">昨天</span><br>
-                在黑洞旁边点亮数字的感觉太爽了，强烈推荐给逻辑爱好者！
-              </div>
-              <div class="comment-item">
-                <strong>✨ 星辰之光</strong> · <span style="font-size:0.7rem;">2天前</span><br>
-                画面特效很酷，黑洞吞噬方块时的动画做得太精致了。
-              </div>
-              <div class="comment-item">
-                <strong>🎯 挑战达人</strong> · <span style="font-size:0.7rem;">4天前</span><br>
-                高难度模式下的谜题设计非常精妙，能玩一整天！
-              </div></div>
+            <div class="comment-item">
+              <strong>💡 逻辑之光</strong> · <span style="font-size:0.7rem;">10分钟前</span><br>
+              黑洞机制太有趣了！每一步都要精心计算，根本停不下来。
+            </div>
+            <div class="comment-item">
+              <strong>🌌 星际探险家</strong> · <span style="font-size:0.7rem;">1小时前</span><br>
+              AI生成的关卡越来越巧妙，难度曲线非常完美。
+            </div>
+            <div class="comment-item">
+              <strong>🧠 谜题大师</strong> · <span style="font-size:0.7rem;">昨天</span><br>
+              在黑洞旁边点亮数字的感觉太爽了，强烈推荐给逻辑爱好者！
+            </div>
+            <div class="comment-item">
+              <strong>✨ 星辰之光</strong> · <span style="font-size:0.7rem;">2天前</span><br>
+              画面特效很酷，黑洞吞噬方块时的动画做得太精致了。
+            </div>
+            <div class="comment-item">
+              <strong>🎯 挑战达人</strong> · <span style="font-size:0.7rem;">4天前</span><br>
+              高难度模式下的谜题设计非常精妙，能玩一整天！
+            </div>
+          </div>
           <div class="comment-input-area" style="display:none;">
-            <input type="text" class="comment-input" id="commentInput" placeholder="写下你的想法..." onkeydown="if(event.key==='Enter')submitComment()" />
+            <input type="text" class="comment-input" id="commentInput" placeholder="写下你的想法..."
+              onkeydown="if(event.key==='Enter')submitComment()" />
             <button class="comment-submit" id="submitCommentBtn"><i class="fas fa-paper-plane"></i></button>
           </div>
         </div>
 
         <div id="tab-achievements" class="tab-content">
-            <div class="achievement-item">
-              <span class="ach-icon">💡</span>
-              <div>
-                <strong>初识黑洞</strong><br>
-                <span style="font-size:0.75rem;color:#6a6f9a;">完成第一关</span>
-              </div>
+          <div class="achievement-item">
+            <span class="ach-icon">💡</span>
+            <div>
+              <strong>初识黑洞</strong><br>
+              <span style="font-size:0.75rem;color:#6a6f9a;">完成第一关</span>
             </div>
-            <div class="achievement-item">
-              <span class="ach-icon">🌌</span>
-              <div>
-                <strong>星际旅者</strong><br>
-                <span style="font-size:0.75rem;color:#6a6f9a;">通过 10 个 AI 生成的关卡</span>
-              </div>
+          </div>
+          <div class="achievement-item">
+            <span class="ach-icon">🌌</span>
+            <div>
+              <strong>星际旅者</strong><br>
+              <span style="font-size:0.75rem;color:#6a6f9a;">通过 10 个 AI 生成的关卡</span>
             </div>
-            <div class="achievement-item">
-              <span class="ach-icon">👑</span>
-              <div>
-                <strong>黑洞克星</strong><br>
-                <span style="font-size:0.75rem;color:#6a6f9a;">累计扫清 50 个黑洞</span>
-              </div>
+          </div>
+          <div class="achievement-item">
+            <span class="ach-icon">👑</span>
+            <div>
+              <strong>黑洞克星</strong><br>
+              <span style="font-size:0.75rem;color:#6a6f9a;">累计扫清 50 个黑洞</span>
             </div>
-            <div class="achievement-item">
-              <span class="ach-icon">✨</span>
-              <div>
-                <strong>无尽挑战</strong><br>
-                <span style="font-size:0.75rem;color:#6a6f9a;">在无尽模式下得分超过 10000</span>
-              </div>
-            </div></div>
+          </div>
+          <div class="achievement-item">
+            <span class="ach-icon">✨</span>
+            <div>
+              <strong>无尽挑战</strong><br>
+              <span style="font-size:0.75rem;color:#6a6f9a;">在无尽模式下得分超过 10000</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -198,11 +342,11 @@
       ).join('');
     }
 
-    let comments = [{"id": 49, "game_id": 15, "user_id": 0, "username": "💡 逻辑之光", "avatar": "", "content": "黑洞机制太有趣了！每一步都要精心计算，根本停不下来。", "created_at": "10分钟前"}, {"id": 50, "game_id": 15, "user_id": 0, "username": "🌌 星际探险家", "avatar": "", "content": "AI生成的关卡越来越巧妙，难度曲线非常完美。", "created_at": "1小时前"}, {"id": 51, "game_id": 15, "user_id": 0, "username": "🧠 谜题大师", "avatar": "", "content": "在黑洞旁边点亮数字的感觉太爽了，强烈推荐给逻辑爱好者！", "created_at": "昨天"}, {"id": 52, "game_id": 15, "user_id": 0, "username": "✨ 星辰之光", "avatar": "", "content": "画面特效很酷，黑洞吞噬方块时的动画做得太精致了。", "created_at": "2天前"}, {"id": 53, "game_id": 15, "user_id": 0, "username": "🎯 挑战达人", "avatar": "", "content": "高难度模式下的谜题设计非常精妙，能玩一整天！", "created_at": "4天前"}];
-    let achievements = [{"id": 57, "game_id": 15, "user_id": 0, "icon": "💡", "name": "初识黑洞", "description": "完成第一关"}, {"id": 58, "game_id": 15, "user_id": 0, "icon": "🌌", "name": "星际旅者", "description": "通过 10 个 AI 生成的关卡"}, {"id": 59, "game_id": 15, "user_id": 0, "icon": "👑", "name": "黑洞克星", "description": "累计扫清 50 个黑洞"}, {"id": 60, "game_id": 15, "user_id": 0, "icon": "✨", "name": "无尽挑战", "description": "在无尽模式下得分超过 10000"}];
-    let recommended = [{"id": 1, "game_name": "🧩 量子拼图", "game_cover": "", "game_star": 4.8, "game_type": "益智", "create_time": "2024-11-15", "play_count": 15234, "game_tag": ["脑力", "逻辑", "AI生成"], "description": "由AI动态生成的无限拼图，每一局都独一无二。量子算法确保难度智能匹配你的水平！", "game_file": "1", "game_intro": "🧩 玩法说明\n\n游戏规则\n每个拼图由9个方块组成，其中一个是空位。点击与空位相邻的方块，即可将其移动到空位。通过反复移动，将所有方块按顺序排列即为通关。\n\n游戏目标\n将打乱的方块按编号顺序还原，完成拼图。AI会根据你的完成时间给出评分（1-5星）。\n\n游戏结束\n当所有方块按顺序排列完成时，游戏结束并显示你的成绩。点击「打乱重来」即可开始新的一局。\n\n特色\n🧩 AI 动态生成布局，每局不同\n🎯 计时挑战，考验你的速度\n🧠 难度自适应，AI 根据你的水平调整\n\n小技巧\n先还原第一行和第一列，再处理剩下的部分，这样可以大大降低拼图难度。"}, {"id": 2, "game_name": "🎨 神笔马良AI", "game_cover": "", "game_star": 4.9, "game_type": "创意", "create_time": "2024-12-01", "play_count": 28341, "game_tag": ["绘画", "AI创作", "想象力"], "description": "用文字描述你的想象，AI实时生成游戏世界。你的创意就是游戏的主角！", "game_file": null, "game_intro": "🎨 玩法说明\n\n游戏规则\n在输入框中用文字描述你想要的画面，AI 会实时将你的描述转化为画作。你可以调整风格、色彩和细节，AI 会根据你的反馈不断优化作品。\n\n游戏目标\n发挥想象力，创作出最惊艳的 AI 画作。收集不同风格的作品，打造属于你自己的画廊。\n\n特色\n🎨 支持多种艺术风格（水彩、油画、像素风等）\n🖌️ 实时生成，所见即所得\n🌈 可迭代修改，AI 理解你的想法\n\n小技巧\n描述越具体，AI 生成的效果越精准。尝试加入光线、视角、氛围等关键词，让你的画作更出彩！"}, {"id": 3, "game_name": "🤖 代码大冒险", "game_cover": "", "game_star": 4.7, "game_type": "教育", "create_time": "2024-10-20", "play_count": 9876, "game_tag": ["编程", "学习", "AI导师"], "description": "AI导师陪你一起写代码闯关，从Python到AI算法，边玩边学！", "game_file": null, "game_intro": "🤖 玩法说明\n\n游戏规则\n每一关都是一个编程挑战，你需要编写代码来解决问题。AI 导师会实时检查你的代码，给出提示和反馈。完成任务即可解锁下一关。\n\n游戏目标\n从零基础开始，逐步掌握编程基础知识，最终能够独立解决复杂的算法问题。\n\n特色\n💻 AI 导师实时辅导，耐心解答\n🐍 从 Python 基础到 AI 算法，循序渐进\n🏆 每关都有星级评价，挑战满分\n\n小技巧\n遇到困难时，先尝试自己思考，实在不行再向 AI 导师求助。独立解决问题是学习编程最好的方式！"}, {"id": 4, "game_name": "🌌 星际漫游者", "game_cover": "", "game_star": 4.6, "game_type": "冒险", "create_time": "2024-09-10", "play_count": 21567, "game_tag": ["探索", "宇宙", "AI剧情"], "description": "AI驱动的无限宇宙探索游戏。每个星球都有独特的生态系统和故事等待发现！", "game_file": null, "game_intro": "🌌 玩法说明\n\n游戏规则\n驾驶你的星际飞船探索未知星系。每到达一个新星球，你都可以探索其独特的生态环境、与外星生物互动、收集资源和线索。\n\n游戏目标\n探索尽可能多的星球，完成每个星球上的任务，解锁宇宙的奥秘。\n\n特色\n🚀 无限生成的宇宙，每次探索都是全新的\n🌍 每个星球都有独特的生态系统和故事\n📖 AI 驱动的分支剧情，你的选择影响故事走向\n\n小技巧\n留意每个星球上的线索，它们可能会指引你发现隐藏的稀有星球和宝藏！"}];
+    let comments = [{ "id": 49, "game_id": 15, "user_id": 0, "username": "💡 逻辑之光", "avatar": "", "content": "黑洞机制太有趣了！每一步都要精心计算，根本停不下来。", "created_at": "10分钟前" }, { "id": 50, "game_id": 15, "user_id": 0, "username": "🌌 星际探险家", "avatar": "", "content": "AI生成的关卡越来越巧妙，难度曲线非常完美。", "created_at": "1小时前" }, { "id": 51, "game_id": 15, "user_id": 0, "username": "🧠 谜题大师", "avatar": "", "content": "在黑洞旁边点亮数字的感觉太爽了，强烈推荐给逻辑爱好者！", "created_at": "昨天" }, { "id": 52, "game_id": 15, "user_id": 0, "username": "✨ 星辰之光", "avatar": "", "content": "画面特效很酷，黑洞吞噬方块时的动画做得太精致了。", "created_at": "2天前" }, { "id": 53, "game_id": 15, "user_id": 0, "username": "🎯 挑战达人", "avatar": "", "content": "高难度模式下的谜题设计非常精妙，能玩一整天！", "created_at": "4天前" }];
+    let achievements = [{ "id": 57, "game_id": 15, "user_id": 0, "icon": "💡", "name": "初识黑洞", "description": "完成第一关" }, { "id": 58, "game_id": 15, "user_id": 0, "icon": "🌌", "name": "星际旅者", "description": "通过 10 个 AI 生成的关卡" }, { "id": 59, "game_id": 15, "user_id": 0, "icon": "👑", "name": "黑洞克星", "description": "累计扫清 50 个黑洞" }, { "id": 60, "game_id": 15, "user_id": 0, "icon": "✨", "name": "无尽挑战", "description": "在无尽模式下得分超过 10000" }];
+    let recommended = [{ "id": 1, "game_name": "🧩 量子拼图", "game_cover": "", "game_star": 4.8, "game_type": "益智", "create_time": "2024-11-15", "play_count": 15234, "game_tag": ["脑力", "逻辑", "AI生成"], "description": "由AI动态生成的无限拼图，每一局都独一无二。量子算法确保难度智能匹配你的水平！", "game_file": "1", "game_intro": "🧩 玩法说明\n\n游戏规则\n每个拼图由9个方块组成，其中一个是空位。点击与空位相邻的方块，即可将其移动到空位。通过反复移动，将所有方块按顺序排列即为通关。\n\n游戏目标\n将打乱的方块按编号顺序还原，完成拼图。AI会根据你的完成时间给出评分（1-5星）。\n\n游戏结束\n当所有方块按顺序排列完成时，游戏结束并显示你的成绩。点击「打乱重来」即可开始新的一局。\n\n特色\n🧩 AI 动态生成布局，每局不同\n🎯 计时挑战，考验你的速度\n🧠 难度自适应，AI 根据你的水平调整\n\n小技巧\n先还原第一行和第一列，再处理剩下的部分，这样可以大大降低拼图难度。" }, { "id": 2, "game_name": "🎨 神笔马良AI", "game_cover": "", "game_star": 4.9, "game_type": "创意", "create_time": "2024-12-01", "play_count": 28341, "game_tag": ["绘画", "AI创作", "想象力"], "description": "用文字描述你的想象，AI实时生成游戏世界。你的创意就是游戏的主角！", "game_file": null, "game_intro": "🎨 玩法说明\n\n游戏规则\n在输入框中用文字描述你想要的画面，AI 会实时将你的描述转化为画作。你可以调整风格、色彩和细节，AI 会根据你的反馈不断优化作品。\n\n游戏目标\n发挥想象力，创作出最惊艳的 AI 画作。收集不同风格的作品，打造属于你自己的画廊。\n\n特色\n🎨 支持多种艺术风格（水彩、油画、像素风等）\n🖌️ 实时生成，所见即所得\n🌈 可迭代修改，AI 理解你的想法\n\n小技巧\n描述越具体，AI 生成的效果越精准。尝试加入光线、视角、氛围等关键词，让你的画作更出彩！" }, { "id": 3, "game_name": "🤖 代码大冒险", "game_cover": "", "game_star": 4.7, "game_type": "教育", "create_time": "2024-10-20", "play_count": 9876, "game_tag": ["编程", "学习", "AI导师"], "description": "AI导师陪你一起写代码闯关，从Python到AI算法，边玩边学！", "game_file": null, "game_intro": "🤖 玩法说明\n\n游戏规则\n每一关都是一个编程挑战，你需要编写代码来解决问题。AI 导师会实时检查你的代码，给出提示和反馈。完成任务即可解锁下一关。\n\n游戏目标\n从零基础开始，逐步掌握编程基础知识，最终能够独立解决复杂的算法问题。\n\n特色\n💻 AI 导师实时辅导，耐心解答\n🐍 从 Python 基础到 AI 算法，循序渐进\n🏆 每关都有星级评价，挑战满分\n\n小技巧\n遇到困难时，先尝试自己思考，实在不行再向 AI 导师求助。独立解决问题是学习编程最好的方式！" }, { "id": 4, "game_name": "🌌 星际漫游者", "game_cover": "", "game_star": 4.6, "game_type": "冒险", "create_time": "2024-09-10", "play_count": 21567, "game_tag": ["探索", "宇宙", "AI剧情"], "description": "AI驱动的无限宇宙探索游戏。每个星球都有独特的生态系统和故事等待发现！", "game_file": null, "game_intro": "🌌 玩法说明\n\n游戏规则\n驾驶你的星际飞船探索未知星系。每到达一个新星球，你都可以探索其独特的生态环境、与外星生物互动、收集资源和线索。\n\n游戏目标\n探索尽可能多的星球，完成每个星球上的任务，解锁宇宙的奥秘。\n\n特色\n🚀 无限生成的宇宙，每次探索都是全新的\n🌍 每个星球都有独特的生态系统和故事\n📖 AI 驱动的分支剧情，你的选择影响故事走向\n\n小技巧\n留意每个星球上的线索，它们可能会指引你发现隐藏的稀有星球和宝藏！" }];
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       renderNavBar('navbar');
       renderFooter('footer');
       renderGameCards(recommended, 'recommendGrid');
@@ -211,10 +355,10 @@
       // ── 按钮事件绑定 ──
       document.getElementById('playBtn')?.addEventListener('click', handlePlay);
       document.getElementById('backBtn')?.addEventListener('click', exitPlay);
-      document.getElementById('tabPreviewPlay')?.addEventListener('click', function() { switchPreviewTab('play'); });
-      document.getElementById('tabPreviewIntro')?.addEventListener('click', function() { switchPreviewTab('intro'); });
-      document.getElementById('tabInfoComments')?.addEventListener('click', function() { switchInfoTab('comments'); });
-      document.getElementById('tabInfoAch')?.addEventListener('click', function() { switchInfoTab('achievements'); });
+      document.getElementById('tabPreviewPlay')?.addEventListener('click', function () { switchPreviewTab('play'); });
+      document.getElementById('tabPreviewIntro')?.addEventListener('click', function () { switchPreviewTab('intro'); });
+      document.getElementById('tabInfoComments')?.addEventListener('click', function () { switchInfoTab('comments'); });
+      document.getElementById('tabInfoAch')?.addEventListener('click', function () { switchInfoTab('achievements'); });
       document.getElementById('submitCommentBtn')?.addEventListener('click', submitComment);
     });
 
@@ -287,4 +431,5 @@
     }
   </script>
 </body>
+
 </html>

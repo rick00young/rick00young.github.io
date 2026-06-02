@@ -20,9 +20,9 @@ function renderNavBar(containerId) {
                 </form>
             </div>
             <div class="nav-actions">
-                <a href="index.html" title="首页"><i class="fas fa-home"></i></a>
-                <a href="games.html" title="全部游戏"><i class="fas fa-th-large"></i></a>
-                <a href="about.html" title="关于我们"><i class="fas fa-info-circle"></i></a>
+                <a href="../../index.html" title="首页"><i class="fas fa-home"></i></a>
+                <a href="../../games.html" title="全部游戏"><i class="fas fa-th-large"></i></a>
+                <a href="../../about.html" title="关于我们"><i class="fas fa-info-circle"></i></a>
             </div>
         </nav>
     `;
